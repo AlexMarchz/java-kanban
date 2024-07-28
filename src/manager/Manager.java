@@ -1,18 +1,18 @@
-package Manager;
+package manager;
 
-import Data.Epic;
-import Data.SubTask;
-import Data.Task;
-import Status.Status;
+import data.Epic;
+import data.SubTask;
+import data.Task;
+import status.Status;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Manager {
 
-    HashMap<Integer, SubTask> subTasks = new HashMap<>();
-    HashMap<Integer, Epic> epics = new HashMap<>();
-    HashMap<Integer, Task> tasks = new HashMap<>();
+    private HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private HashMap<Integer, Epic> epics = new HashMap<>();
+    private HashMap<Integer, Task> tasks = new HashMap<>();
 
     private int generatorId = 0;
 
@@ -37,7 +37,7 @@ public class Manager {
         epics.put(epic.getId(), epic);
     }
 
-    public void updateEpicStatus(Epic epic) {
+    private void updateEpicStatus(Epic epic) {
         if (!epics.containsKey(epic.getId())) {
             return;
         }
@@ -158,7 +158,7 @@ public class Manager {
         } else {
             System.out.println("Epic is null");
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public SubTask findSubTaskById(int id) {
@@ -174,29 +174,14 @@ public class Manager {
     }
 
     public ArrayList<SubTask> showAllSubTasks() {
-        if (subTasks != null) {
-            return new ArrayList<>(subTasks.values());
-        } else {
-            System.out.println("This SubTasks is null");
-        }
-        return null;
+        return new ArrayList<>(subTasks.values());
     }
 
     public ArrayList<Epic> showAllEpics() {
-        if (epics != null) {
-            return new ArrayList<>(epics.values());
-        } else {
-            System.out.println("This Epic is null");
-        }
-        return null;
+        return new ArrayList<>(epics.values());
     }
 
     public ArrayList<Task> showAllTasks() {
-        if (tasks != null) {
-            return new ArrayList<>(tasks.values());
-        } else {
-            System.out.println("This Task is null");
-        }
-        return null;
+        return new ArrayList<>(tasks.values());
     }
 }

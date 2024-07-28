@@ -1,8 +1,4 @@
-package Data;
-
-import Status.Status;
-
-import java.util.ArrayList;
+package data;
 
 public class SubTask extends Task {
 

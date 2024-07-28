@@ -1,6 +1,6 @@
-package Data;
+package data;
 
-import Status.Status;
+import status.Status;
 import java.util.Objects;
 
 public class Task {

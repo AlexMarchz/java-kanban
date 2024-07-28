@@ -1,7 +1,7 @@
-import Data.SubTask;
-import Data.Epic;
-import Manager.Manager;
-import Status.Status;
+import data.SubTask;
+import data.Epic;
+import manager.Manager;
+import status.Status;
 
 public class Main {
     public static void main(String[] args) {
