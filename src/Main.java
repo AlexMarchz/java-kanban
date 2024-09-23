@@ -1,11 +1,12 @@
 import data.SubTask;
 import data.Epic;
-import manager.Manager;
+import manager.InMemoryHistoryManager;
+import manager.InMemoryTaskManager;
 import status.Status;
 
 public class Main {
     public static void main(String[] args) {
-        Manager manager = new Manager();
+        InMemoryTaskManager manager = new InMemoryTaskManager(new InMemoryHistoryManager());
 
         Epic epic1 = new Epic("Epic 1", "Цель такая-то");
         manager.addEpic(epic1);
