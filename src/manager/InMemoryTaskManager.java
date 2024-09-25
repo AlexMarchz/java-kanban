@@ -163,6 +163,7 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.clear();
     }
 
+    @Override
     public ArrayList<SubTask> findAllSubtaskByEpicId(int id) {
         if (!epics.containsKey(id)) {
             return new ArrayList<>();
@@ -182,14 +183,17 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public SubTask findSubTaskById(int id) {
+        history.add(subTasks.get(id));
         return subTasks.get(id);
     }
 
     public Epic findEpicById(int id) {
+        history.add(epics.get(id));
         return epics.get(id);
     }
 
     public Task findTaskById(int id) {
+        history.add(tasks.get(id));
         return tasks.get(id);
     }
 

@@ -18,6 +18,8 @@ public interface TaskManager {
 
     void updateSubTask(SubTask subTask);
 
+    ArrayList<SubTask> findAllSubtaskByEpicId(int id);
+
     void updateEpic(Epic epic);
 
     void updateTask(Task task);
