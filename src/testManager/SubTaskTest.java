@@ -11,7 +11,6 @@ class SubTaskTest {
 
     @Test
     public void subTasksEqualsIfIdEquals() {
-
         Epic epic = new Epic("Тестовое описание", "Тестовое имя");
 
         SubTask subTask1 = new SubTask("Описание_1", "Наименование_1", epic.getId());

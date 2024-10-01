@@ -23,18 +23,15 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void add() {
-
         history.add(task);
         historyList = history.getHistory();
 
         assertNotNull(historyList);
         assertEquals(1, historyList.size());
-
     }
 
     @Test
     void shouldReturn10TasksWhenAddMore() {
-
         for (int i = 0; i < 15; i++) {
             history.add(task);
         }
