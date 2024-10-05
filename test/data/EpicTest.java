@@ -1,8 +1,7 @@
-package testManager;
+package data;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import data.Epic;
 
 class EpicTest {
 

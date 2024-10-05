@@ -1,7 +1,5 @@
-package testManager;
+package manager;
 
-import manager.InMemoryHistoryManager;
-import manager.InMemoryTaskManager;
 import data.Epic;
 import data.SubTask;
 import data.Task;
@@ -9,7 +7,7 @@ import data.Task;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import status.Status;
+import java.util.ArrayList;
 
 class InMemoryTaskManagerTest {
 
@@ -89,7 +87,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void checkOfRemovingOfTask() {
+    void checkOfRemovingOfTaskById() {
         taskManager.addTask(task);
         assertNotNull(taskManager.findTaskById(task.getId()));
 
@@ -98,7 +96,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void testRemoveEpicById() {
+    void checkOfRemovingOfEpicById() {
         taskManager.addEpic(epic);
         assertNotNull(taskManager.findEpicById(epic.getId()));
 
@@ -107,7 +105,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void testRemoveSubTaskById() {
+    void checkOfRemovingOfSubTaskById() {
         taskManager.addEpic(epic);
         taskManager.addSubTask(subTask);
         taskManager.removeSubTaskById(subTask.getId());
@@ -115,51 +113,6 @@ class InMemoryTaskManagerTest {
         assertEquals(0, taskManager.showAllSubTasks().size());
     }
 
-    @Test
-    void testUpdateTask() {
-        taskManager.addTask(task);
-
-        Task updatedTask = new Task("Новое описание таска", "Новое наименование таска");
-        taskManager.updateTask(updatedTask);
-
-        assertEquals("Новое описание таска", updatedTask.getDescriptions());
-        assertEquals("Новое наименование таска", updatedTask.getName());
-    }
-
-    @Test
-    void testUpdateSubtask() {
-        taskManager.addEpic(epic);
-        taskManager.addSubTask(subTask);
-
-        SubTask updatedSubTask = new SubTask("Новое описание сабтаска", "Новое наименование сабтаска", epic.getId());
-        taskManager.updateSubTask(updatedSubTask);
-
-        assertEquals("Новое описание сабтаска", updatedSubTask.getDescriptions());
-        assertEquals("Новое наименование сабтаска", updatedSubTask.getName());
-    }
-
-    @Test
-    void testUpdateEpic() {
-        taskManager.addEpic(epic);
-
-        Epic updatedEpic = new Epic("Новое описание эпической задачи", "Новое наименование эпической задачи");
-        taskManager.updateEpic(updatedEpic);
-
-        // Проверка результата
-        assertEquals("Новое описание эпической задачи", updatedEpic.getDescriptions());
-        assertEquals("Новое наименование эпической задачи", updatedEpic.getName());
-    }
-
-    @Test
-    void testUpdateEpicStatus() {
-        taskManager.addEpic(epic);
-        taskManager.addSubTask(subTask);
-        epic.setStatus(Status.DONE);
-
-        taskManager.updateEpicStatus(epic);
-
-        assertEquals(Status.DONE, epic.getStatus());
-    }
 
     @Test
     public void testFindAllSubtasksByValidEpicId() {
@@ -167,5 +120,36 @@ class InMemoryTaskManagerTest {
         taskManager.addSubTask(subTask);
 
         assertEquals(taskManager.showAllSubTasks(), taskManager.findAllSubtaskByEpicId(epic.getId()));
+    }
+
+    @Test
+    public void testShowAllSubTasks() {
+        taskManager.addEpic(epic);
+        taskManager.addSubTask(subTask);
+
+        ArrayList<SubTask> actual = taskManager.showAllSubTasks();
+        int expectedSize = 0;
+
+        assertEquals(expectedSize, actual.size());
+    }
+
+    @Test
+    public void testShowAllTasks() {
+        taskManager.addTask(task);
+
+        ArrayList<Task> actual = taskManager.showAllTasks();
+        int expectedSize = 1;
+
+        assertEquals(expectedSize, actual.size());
+    }
+
+    @Test
+    public void testShowAllEpics() {
+        taskManager.addEpic(epic);
+
+        ArrayList<Epic> actual = taskManager.showAllEpics();
+        int expectedSize = 1;
+
+        assertEquals(expectedSize, actual.size());
     }
 }

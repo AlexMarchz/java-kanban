@@ -1,9 +1,8 @@
-package testManager;
+package manager;
 
 import java.util.ArrayList;
 
 import data.Task;
-import manager.InMemoryHistoryManager;
 
 import org.junit.jupiter.api.BeforeAll;
 import static org.junit.jupiter.api.Assertions.*;

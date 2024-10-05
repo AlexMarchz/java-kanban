@@ -4,6 +4,8 @@ import manager.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
 import status.Status;
 
+//Сергей, привет, надеюсь, что всё понял и нормально сделал)
+
 public class Main {
     public static void main(String[] args) {
         InMemoryTaskManager manager = new InMemoryTaskManager(new InMemoryHistoryManager());
@@ -22,21 +24,21 @@ public class Main {
         System.out.println("Добавили вторую подэпическую задачу");
         System.out.println(subtask2);
         subtask1.setStatus(Status.IN_PROGRESS);
-        manager.updateSubTask(subtask1);
+
         System.out.println("Статус изменён: В ПРОЦЕССЕ/ IN_PROGRESS");
         System.out.println(subtask1);
         System.out.println(subtask2);
         System.out.println("Проверяем статус эпика после изменения статуса сабтаска");
         System.out.println(epic1);
         subtask2.setStatus(Status.DONE);
-        manager.updateSubTask(subtask2);
+
         System.out.println("Поменяли статус второго сабтаска на ВЫПОЛНЕН/ DONE");
         System.out.println(subtask1);
         System.out.println(subtask2);
         System.out.println("Проверяем статус эпика после изменения статуса второго сабтаска");
         System.out.println(epic1);
         subtask1.setStatus(Status.DONE);
-        manager.updateSubTask(subtask1);
+
         System.out.println("Выставили статус ВЫПОЛНЕН/DONE первому сабтаску" + subtask1.getStatus());
         System.out.println(subtask1);
         System.out.println(subtask2);
