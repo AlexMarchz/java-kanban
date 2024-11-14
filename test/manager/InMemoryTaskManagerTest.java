@@ -7,7 +7,7 @@ import data.Task;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
+import java.util.List;
 
 class InMemoryTaskManagerTest {
 
@@ -127,7 +127,7 @@ class InMemoryTaskManagerTest {
         taskManager.addEpic(epic);
         taskManager.addSubTask(subTask);
 
-        ArrayList<SubTask> actual = taskManager.showAllSubTasks();
+        List<SubTask> actual = taskManager.showAllSubTasks();
         int expectedSize = 0;
 
         assertEquals(expectedSize, actual.size());
@@ -137,7 +137,7 @@ class InMemoryTaskManagerTest {
     public void testShowAllTasks() {
         taskManager.addTask(task);
 
-        ArrayList<Task> actual = taskManager.showAllTasks();
+        List<Task> actual = taskManager.showAllTasks();
         int expectedSize = 1;
 
         assertEquals(expectedSize, actual.size());
@@ -147,7 +147,7 @@ class InMemoryTaskManagerTest {
     public void testShowAllEpics() {
         taskManager.addEpic(epic);
 
-        ArrayList<Epic> actual = taskManager.showAllEpics();
+        List<Epic> actual = taskManager.showAllEpics();
         int expectedSize = 1;
 
         assertEquals(expectedSize, actual.size());
