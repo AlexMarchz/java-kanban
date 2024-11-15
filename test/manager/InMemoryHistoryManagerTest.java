@@ -54,6 +54,30 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
+    void removeMidTaskFromHistory() {
+        history.add(task);
+        history.add(epic);
+        history.add(subTask);
+        history.remove(epic.getId());
+
+        assertEquals(history.getHistory(), List.of(task, subTask));
+    }
+
+    @Test
+    void removeSingleTaskFromHistory() {
+        history.add(task);
+        history.remove(task.getId());
+
+        assertEquals(history.getHistory(), List.of());
+    }
+
+    @Test //Тест завершился бы ошибкой, будь там исключение.Наверное
+    void removeTaskFromEmptyHistory() {
+        history.remove(1);
+        assertEquals(history.getHistory(), List.of());
+    }
+
+    @Test
     void checkUniquenessInList() {
         history.add(task);
         history.add(epic);
@@ -62,5 +86,4 @@ class InMemoryHistoryManagerTest {
 
         assertNotEquals(task, history.getHistory().getFirst());
     }
-
 }

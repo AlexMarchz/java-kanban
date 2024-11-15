@@ -76,7 +76,7 @@ class InMemoryTaskManagerTest {
         assertNull(taskManager.findEpicById(epic.getId()));
     }
 
-    @Test  //Не получается нормально сделать этот тест, долго пытался понять и безрезультатно
+    @Test
     public void testClearSubtask() {
         taskManager.addEpic(epic);
         taskManager.addTask(subTask);

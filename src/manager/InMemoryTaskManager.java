@@ -11,10 +11,10 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private InMemoryHistoryManager history;
-    private Map<Integer, SubTask> subTasks = new HashMap<>();
-    private Map<Integer, Epic> epics = new HashMap<>();
-    private Map<Integer, Task> tasks = new HashMap<>();
+    private final InMemoryHistoryManager history;
+    private final Map<Integer, SubTask> subTasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, Task> tasks = new HashMap<>();
 
     private int generatorId = 0;
 
@@ -112,6 +112,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.removeSubTask(id);
             updateEpicStatus(epic);
             subTasks.remove(id);
+            history.remove(id);
         } else {
             System.out.println("SubTask is null");
         }
@@ -127,17 +128,20 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic != null) {
             for (Integer subTask : epic.getSubTaskIds()) {
                 subTasks.remove(subTask);
+                history.remove(subTask);
             }
         } else {
             System.out.println("Epic is null");
         }
 
         epics.remove(id);
+        history.remove(id);
     }
 
     @Override
     public void removeTaskById(int id) {
         tasks.remove(id);
+        history.remove(id);
     }
 
     @Override
