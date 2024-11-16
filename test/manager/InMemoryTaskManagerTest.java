@@ -7,6 +7,8 @@ import data.Task;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 import java.util.List;
 
 class InMemoryTaskManagerTest {
@@ -64,26 +66,35 @@ class InMemoryTaskManagerTest {
         taskManager.addTask(task);
         taskManager.clearTasks();
 
-        assertNull(taskManager.findTaskById(task.getId()));
+        List<Task> task = taskManager.showAllTasks();
+        assertTrue(task.isEmpty());
     }
 
     @Test
     void testClearEpics() {
         taskManager.addEpic(epic);
-        taskManager.addTask(subTask);
+        taskManager.addSubTask(subTask);
         taskManager.clearEpics();
 
-        assertNull(taskManager.findEpicById(epic.getId()));
+        List<SubTask> subTasks = taskManager.showAllSubTasks();
+        assertTrue(subTasks.isEmpty());
+
+        List<Epic> epic = taskManager.showAllEpics();
+        assertTrue(epic.isEmpty());
     }
 
     @Test
-    public void testClearSubtask() {
+    public void testClearSubtask() {  //Комментарий понял, справедливо тогда и в остальных clear поменять проверки
         taskManager.addEpic(epic);
-        taskManager.addTask(subTask);
+        taskManager.addSubTask(subTask);
 
         taskManager.clearSubTasks();
 
-        assertNull(taskManager.findSubTaskById(subTask.getId()));
+        ArrayList<Integer> subTasksIds = epic.getSubTaskIds();
+        assertTrue(subTasksIds.isEmpty());
+
+        List<SubTask> subTasks = taskManager.showAllSubTasks();
+        assertTrue(subTasks.isEmpty());
     }
 
     @Test

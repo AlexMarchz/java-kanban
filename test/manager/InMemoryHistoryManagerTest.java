@@ -71,7 +71,7 @@ class InMemoryHistoryManagerTest {
         assertEquals(history.getHistory(), List.of());
     }
 
-    @Test //Тест завершился бы ошибкой, будь там исключение.Наверное
+    @Test
     void removeTaskFromEmptyHistory() {
         history.remove(1);
         assertEquals(history.getHistory(), List.of());

@@ -146,6 +146,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearSubTasks() {
+        for (SubTask subTask : showAllSubTasks()) { // проходимся по всем сабтаскам
+            history.remove(subTask.getId()); // удаляем по айди
+        }
         subTasks.clear();
         for (Epic epic : epics.values()) {
             epic.clearSubTasks();
@@ -155,12 +158,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearEpics() {
+        for (SubTask subTask : showAllSubTasks()) {
+            history.remove(subTask.getId());
+        }
         subTasks.clear();
+        for (Epic epic : showAllEpics()) {
+            history.remove(epic.getId());
+        }
         epics.clear();
     }
 
     @Override
     public void clearTasks() {
+        for (Task task : showAllTasks()) {
+            history.remove(task.getId());
+        }
         tasks.clear();
     }
 
