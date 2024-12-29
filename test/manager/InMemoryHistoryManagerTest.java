@@ -1,8 +1,10 @@
 package manager;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import data.Task;
+import data.Epic;
+import data.SubTask;
 
 import org.junit.jupiter.api.BeforeAll;
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,30 +14,76 @@ import org.junit.jupiter.api.Test;
 class InMemoryHistoryManagerTest {
     InMemoryHistoryManager history = new InMemoryHistoryManager();
     static Task task;
-    static ArrayList<Task> historyList;
+    static Epic epic;
+    static SubTask subTask;
 
     @BeforeAll
     static void beforeAll() {
         task = new Task("Описание", "Наименование");
-        historyList = new ArrayList<>();
+        epic = new Epic("Описание эпика", "Наименование эпика");
+        subTask = new SubTask("Описание сабтаска", "Наименование сабтаска", 3);
+        task.setId(1);
+        epic.setId(2);
+        subTask.setId(3);
     }
 
     @Test
     void add() {
         history.add(task);
-        historyList = history.getHistory();
 
-        assertNotNull(historyList);
-        assertEquals(1, historyList.size());
+        assertNotNull(history.getHistory());
+        assertEquals(history.getHistory().getFirst(), task);
     }
 
     @Test
-    void shouldReturn10TasksWhenAddMore() {
-        for (int i = 0; i < 15; i++) {
-            history.add(task);
-        }
-        historyList = history.getHistory();
-        assertEquals(10, historyList.size());
+    void removeFirstTaskFromHistory() {
+        history.add(task);
+        history.add(epic);
+        history.add(subTask);
+        history.remove(task.getId());
+        assertEquals(history.getHistory(), List.of(epic, subTask));
+    }
+    @Test
+    void removeLastFromTaskHistory() {
+        history.add(task);
+        history.add(epic);
+        history.add(subTask);
+        history.remove(subTask.getId());
+
+        assertEquals(history.getHistory(), List.of(task, epic));
     }
 
+    @Test
+    void removeMidTaskFromHistory() {
+        history.add(task);
+        history.add(epic);
+        history.add(subTask);
+        history.remove(epic.getId());
+
+        assertEquals(history.getHistory(), List.of(task, subTask));
+    }
+
+    @Test
+    void removeSingleTaskFromHistory() {
+        history.add(task);
+        history.remove(task.getId());
+
+        assertEquals(history.getHistory(), List.of());
+    }
+
+    @Test
+    void removeTaskFromEmptyHistory() {
+        history.remove(1);
+        assertEquals(history.getHistory(), List.of());
+    }
+
+    @Test
+    void checkUniquenessInList() {
+        history.add(task);
+        history.add(epic);
+        history.add(subTask);
+        history.add(task);
+
+        assertNotEquals(task, history.getHistory().getFirst());
+    }
 }

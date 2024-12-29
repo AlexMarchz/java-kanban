@@ -7,7 +7,9 @@ import data.Task;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
+import java.util.List;
 
 class InMemoryTaskManagerTest {
 
@@ -64,26 +66,35 @@ class InMemoryTaskManagerTest {
         taskManager.addTask(task);
         taskManager.clearTasks();
 
-        assertNull(taskManager.findTaskById(task.getId()));
+        List<Task> task = taskManager.showAllTasks();
+        assertTrue(task.isEmpty());
     }
 
     @Test
     void testClearEpics() {
         taskManager.addEpic(epic);
-        taskManager.addTask(subTask);
+        taskManager.addSubTask(subTask);
         taskManager.clearEpics();
 
-        assertNull(taskManager.findEpicById(epic.getId()));
+        List<SubTask> subTasks = taskManager.showAllSubTasks();
+        assertTrue(subTasks.isEmpty());
+
+        List<Epic> epic = taskManager.showAllEpics();
+        assertTrue(epic.isEmpty());
     }
 
-    @Test  //Не получается нормально сделать этот тест, долго пытался понять и безрезультатно
-    public void testClearSubtask() {
+    @Test
+    public void testClearSubtask() {  //Комментарий понял, справедливо тогда и в остальных clear поменять проверки
         taskManager.addEpic(epic);
-        taskManager.addTask(subTask);
+        taskManager.addSubTask(subTask);
 
         taskManager.clearSubTasks();
 
-        assertNull(taskManager.findSubTaskById(subTask.getId()));
+        ArrayList<Integer> subTasksIds = epic.getSubTaskIds();
+        assertTrue(subTasksIds.isEmpty());
+
+        List<SubTask> subTasks = taskManager.showAllSubTasks();
+        assertTrue(subTasks.isEmpty());
     }
 
     @Test
@@ -127,7 +138,7 @@ class InMemoryTaskManagerTest {
         taskManager.addEpic(epic);
         taskManager.addSubTask(subTask);
 
-        ArrayList<SubTask> actual = taskManager.showAllSubTasks();
+        List<SubTask> actual = taskManager.showAllSubTasks();
         int expectedSize = 0;
 
         assertEquals(expectedSize, actual.size());
@@ -137,7 +148,7 @@ class InMemoryTaskManagerTest {
     public void testShowAllTasks() {
         taskManager.addTask(task);
 
-        ArrayList<Task> actual = taskManager.showAllTasks();
+        List<Task> actual = taskManager.showAllTasks();
         int expectedSize = 1;
 
         assertEquals(expectedSize, actual.size());
@@ -147,7 +158,7 @@ class InMemoryTaskManagerTest {
     public void testShowAllEpics() {
         taskManager.addEpic(epic);
 
-        ArrayList<Epic> actual = taskManager.showAllEpics();
+        List<Epic> actual = taskManager.showAllEpics();
         int expectedSize = 1;
 
         assertEquals(expectedSize, actual.size());

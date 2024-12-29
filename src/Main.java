@@ -4,8 +4,6 @@ import manager.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
 import status.Status;
 
-//Сергей, привет, надеюсь, что всё понял и нормально сделал)
-
 public class Main {
     public static void main(String[] args) {
         InMemoryTaskManager manager = new InMemoryTaskManager(new InMemoryHistoryManager());
