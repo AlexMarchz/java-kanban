@@ -12,26 +12,31 @@ import java.util.List;
 public class InMemoryTaskManager implements TaskManager {
 
     private final InMemoryHistoryManager history;
-    private final Map<Integer, SubTask> subTasks = new HashMap<>();
-    private final Map<Integer, Epic> epics = new HashMap<>();
-    private final Map<Integer, Task> tasks = new HashMap<>();
+    protected final Map<Integer, SubTask> subTasks = new HashMap<>();
+    protected final Map<Integer, Epic> epics = new HashMap<>();
+    protected final Map<Integer, Task> tasks = new HashMap<>();
 
-    private int generatorId = 0;
+    protected int nextId = 0;
 
     public InMemoryTaskManager(InMemoryHistoryManager history) {
         this.history = history;
     }
 
     @Override
+    public int generatorId() {
+        return nextId++;
+    }
+
+    @Override
     public void addTask(Task task) {
-        int newId = ++generatorId;
+        int newId = generatorId();
         task.setId(newId);
         tasks.put(task.getId(), task);
     }
 
     @Override
     public void addSubTask(SubTask subTask) {
-        int newId = ++generatorId;
+        int newId = generatorId();
         subTask.setId(newId);
         Epic epic = epics.get(subTask.getEpicId());
         if (epic != null) {
@@ -43,12 +48,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addEpic(Epic epic) {
-        int newId = ++generatorId;
+        int newId = generatorId();
         epic.setId(newId);
         epics.put(epic.getId(), epic);
     }
 
-    private void updateSubTask(SubTask subTask) {
+    protected void updateSubTask(SubTask subTask) {
         if ((subTask == null) || (!subTasks.containsKey(subTask.getId()))) {
             return;
         }
@@ -60,7 +65,7 @@ public class InMemoryTaskManager implements TaskManager {
         updateEpicStatus(epic);
     }
 
-    private void updateEpic(Epic epic) {
+    protected void updateEpic(Epic epic) {
         if (epics.containsKey(epic.getId())) {
             Epic actualEpic = epics.get(epic.getId());
             actualEpic.setName(epic.getName());
@@ -69,7 +74,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void updateTask(Task task) {
+    protected void updateTask(Task task) {
         if (tasks.containsKey(task.getId())) {
             tasks.put(task.getId(), task);
         }

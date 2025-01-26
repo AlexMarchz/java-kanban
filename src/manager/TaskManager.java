@@ -6,6 +6,9 @@ import data.Task;
 import java.util.List;
 
 public interface TaskManager {
+
+    int generatorId();
+
     void addTask(Task task);
 
     void addSubTask(SubTask subTask);
