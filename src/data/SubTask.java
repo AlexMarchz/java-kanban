@@ -4,7 +4,6 @@ import manager.TaskType;
 import status.Status;
 
 public class SubTask extends Task {
-
     private final int epicSubTasksId;
 
     public SubTask(String descriptions, String name, int epicSubTasksId) {
