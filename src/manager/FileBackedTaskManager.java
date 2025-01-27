@@ -3,20 +3,18 @@ package manager;
 import data.Epic;
 import data.SubTask;
 import data.Task;
-import status.Status;
 import exceptions.ManagerSaveException;
 
 import java.io.*;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
     private static final String HEADER = "id,type,name,description, epic\n";
 
     public FileBackedTaskManager(File file) {
-        super(new InMemoryHistoryManager());
+        super(Managers.getDefaultHistory()); //а почему так лучше?
         this.file = file;
     }
 
@@ -45,15 +43,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return fileManager;
     }
 
-    public void save() {
-        try {
-            if (Files.exists(file.toPath())) {
-                Files.delete(file.toPath());
-            }
-            Files.createFile(file.toPath());
-        } catch (IOException io) {
-            throw new ManagerSaveException("Не удалось найти файл");
-        }
+    private void save() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             bufferedWriter.write(HEADER);
             for (Task task : showAllTasks()) {
@@ -68,70 +58,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } catch (IOException io) {
             throw new ManagerSaveException("Не удалось сохранить файл");
         }
-
     }
 
     private static String taskToString(Task task) {
-        return task.getId() + "," +
-                task.getType() + "," +
-                task.getName() + "," +
-                task.getStatus() + "," +
-                task.getDescriptions() +
-                getEpicId(task) + "\n";
-
+        return TaskUtils.taskToString(task);
     }
 
     private static Task taskFromString(String value) {
-        String[] lines = value.split(",");
-        int id = Integer.parseInt(lines[0]);
-        TaskType taskType = TaskType.valueOf(lines[1]);
-        String name = lines[2];
-        Status status = Status.valueOf(lines[3]);
-        String description = lines[4];
-
-        switch (taskType) {
-            case EPIC:
-                return new Epic(id, name, status, description);
-            case SUBTASK:
-                int epicId = Integer.parseInt(lines[5]);
-                return new SubTask(id, name, status, description, epicId);
-            case TASK:
-            default:
-                return new Task(id, name, status, description);
-        }
-    }
-
-    /*private static Task taskFromString(String value) {
-        String[] lines = value.split(",");
-
-        if (lines.length < 5) {
-            throw new IllegalArgumentException("Некорректное количество элементов в строке");
-        }
-
-        int id = Integer.parseInt(lines[0]);
-        String taskType = lines[1];
-        String name = lines[2];
-        Status status = Status.valueOf(lines[3]);
-        String description = lines[4];
-
-        switch (taskType) {
-            case "EPIC":
-                return new Epic(id, name, status, description);
-            case "SUBTASK":
-                int epicId = Integer.parseInt(lines[5]);
-                return new SubTask(id, name, status, description, epicId);
-            default:
-                return new Task(id, name, status, description);
-        }
-    } */
-
-    private static String getEpicId(Task task) {
-        switch (task.getType()) {
-            case SUBTASK:
-                return "," + ((SubTask) task).getEpicId();
-            default:
-                return "";
-        }
+        return TaskUtils.taskFromString(value);
     }
 
     @Override

@@ -14,48 +14,26 @@ class FileBackedTaskManagerTest {
     private Task task;
     private Epic epic;
     private SubTask subTask;
+    private FileBackedTaskManager fileBackedTaskManager;
 
     @BeforeEach
     void setUp() throws IOException {
         file = File.createTempFile("test", ".csv");
         task = new Task("имяТаска", "описаниеТаска", Status.IN_PROGRESS);
         epic = new Epic("имяЭпика", "описаниеЭпика", Status.IN_PROGRESS);
-        subTask = new SubTask("имяСабТаска", "описаниеСабТаска", Status.IN_PROGRESS, 2);
-    }
-
-    /*@Test
-    void testLoadFromFile() {
-        // Arrange: Add tasks to FileBackedTaskManager
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
-        fileBackedTaskManager.addTask(task);
-        fileBackedTaskManager.addEpic(epic);
-        fileBackedTaskManager.addSubTask(subTask);
-
-        FileBackedTaskManager fileManager = FileBackedTaskManager.loadFromFile(file);
+        subTask = new SubTask("имяСабТаска", "описаниеСабТаска", Status.IN_PROGRESS, 1);
+        fileBackedTaskManager = new FileBackedTaskManager(file);
     }
 
     @Test
-    void loadFromEmptyFile() throws IOException {
-        File emptyFile = File.createTempFile("emptyTest", ".csv");
-        FileBackedTaskManager loadFile = FileBackedTaskManager.loadFromFile(emptyFile);
-
-        assertNotNull(loadFile);
-        assertTrue(loadFile.epics.isEmpty());
-        assertTrue(loadFile.subTasks.isEmpty());
-        assertTrue(loadFile.tasks.isEmpty());
-    } */
-
-    @Test
     void testLoadFromFile() {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
-
         fileBackedTaskManager.addTask(task);
         fileBackedTaskManager.addEpic(epic);
         fileBackedTaskManager.addSubTask(subTask);
 
         assertEquals(1, fileBackedTaskManager.tasks.size());
         assertEquals(1, fileBackedTaskManager.epics.size());
-        assertEquals(0, fileBackedTaskManager.subTasks.size()); // не возвращается сабтаск
+        assertEquals(1, fileBackedTaskManager.subTasks.size()); //волшебно)
 
         FileBackedTaskManager fileManager = FileBackedTaskManager.loadFromFile(file);
 

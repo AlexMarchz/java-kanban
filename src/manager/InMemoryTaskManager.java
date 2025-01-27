@@ -22,8 +22,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.history = history;
     }
 
-    @Override
-    public int generatorId() {
+    private int generatorId() {
         return nextId++;
     }
 
