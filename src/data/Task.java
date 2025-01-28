@@ -1,5 +1,6 @@
 package data;
 
+import manager.TaskType;
 import status.Status;
 import java.util.Objects;
 
@@ -16,6 +17,18 @@ public class Task {
         status = Status.NEW;
     }
 
+    public Task(String name, String descriptions, Status status) {
+        this.name = name;
+        this.descriptions = descriptions;
+        this.status = status;
+    }
+
+    public Task(int id, String name, Status status, String descriptions) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.descriptions = descriptions;
+    }
 
     public int getId() {
         return id;
@@ -35,6 +48,10 @@ public class Task {
 
     public Status getStatus() {
         return status;
+    }
+
+    public TaskType getType() {
+        return TaskType.TASK;
     }
 
     public void setStatus(Status status) {

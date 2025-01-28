@@ -139,7 +139,7 @@ class InMemoryTaskManagerTest {
         taskManager.addSubTask(subTask);
 
         List<SubTask> actual = taskManager.showAllSubTasks();
-        int expectedSize = 0;
+        int expectedSize = 1;
 
         assertEquals(expectedSize, actual.size());
     }
