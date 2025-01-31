@@ -3,12 +3,15 @@ package manager;
 import data.Epic;
 import data.SubTask;
 import data.Task;
+import status.Status;
+import exceptions.ManagerSaveException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 class InMemoryTaskManagerTest {
@@ -23,7 +26,11 @@ class InMemoryTaskManagerTest {
         taskManager = new InMemoryTaskManager(new InMemoryHistoryManager());
         epic = new Epic("Описание эпической задачи", "Наименование эпической задачи");
         subTask = new SubTask("Описание сабтаска", "Наименование сабтаска", epic.getId());
+        subTask.setStartTime(LocalDateTime.now().plusHours(1));
+        subTask.setDuration(Duration.ofMinutes(20));
         task = new Task("Описание таска", "Наименование таска");
+        task.setStartTime(LocalDateTime.now());
+        task.setDuration(Duration.ofMinutes(20));
     }
 
     @Test
@@ -84,13 +91,13 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void testClearSubtask() {  //Комментарий понял, справедливо тогда и в остальных clear поменять проверки
+    public void testClearSubtask() {
         taskManager.addEpic(epic);
         taskManager.addSubTask(subTask);
 
         taskManager.clearSubTasks();
 
-        ArrayList<Integer> subTasksIds = epic.getSubTaskIds();
+        List<Integer> subTasksIds = epic.getSubTaskIds();
         assertTrue(subTasksIds.isEmpty());
 
         List<SubTask> subTasks = taskManager.showAllSubTasks();
@@ -162,5 +169,39 @@ class InMemoryTaskManagerTest {
         int expectedSize = 1;
 
         assertEquals(expectedSize, actual.size());
+    }
+
+    @Test
+    void checkOfPriority() {
+        task.setStartTime(LocalDateTime.now());
+        task.setDuration(Duration.ofMinutes(20));
+        taskManager.addTask(task);
+        taskManager.addEpic(epic);
+        subTask.setStartTime(LocalDateTime.now().minusMinutes(60));
+        subTask.setDuration(Duration.ofMinutes(15));
+        subTask.setStatus(Status.NEW);
+        taskManager.addSubTask(subTask);
+        assertEquals(taskManager.getPriorityTasks(), List.of(subTask, task));
+    }
+    @Test
+    void checkForIntersection() {
+        epic.setStartTime(LocalDateTime.of(2024, 8, 25, 18, 0));
+        epic.setDuration(Duration.ofMinutes(30));
+        taskManager.addEpic(epic);
+        task.setStartTime(LocalDateTime.now());
+        task.setDuration(Duration.ofMinutes(60));
+        taskManager.addTask(task);
+        subTask.setStartTime(LocalDateTime.now().plusMinutes(30));
+        subTask.setDuration(Duration.ofMinutes(60));
+        assertThrows(ManagerSaveException.class, () -> taskManager.addSubTask(subTask));
+    }
+    @Test
+    void checkOfHistory() {
+        taskManager.addTask(task);
+        taskManager.addEpic(epic);
+        taskManager.addSubTask(subTask);
+        taskManager.findEpicById(epic.getId());
+        taskManager.findTaskById(task.getId());
+        assertEquals(taskManager.getHistory(), List.of(epic, task));
     }
 }

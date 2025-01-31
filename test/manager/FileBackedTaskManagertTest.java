@@ -7,6 +7,8 @@ import status.Status;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 class FileBackedTaskManagerTest {
 
@@ -20,8 +22,12 @@ class FileBackedTaskManagerTest {
     void setUp() throws IOException {
         file = File.createTempFile("test", ".csv");
         task = new Task("имяТаска", "описаниеТаска", Status.IN_PROGRESS);
+        task.setStartTime(LocalDateTime.now());
+        task.setDuration(Duration.ofMinutes(20));
         epic = new Epic("имяЭпика", "описаниеЭпика", Status.IN_PROGRESS);
         subTask = new SubTask("имяСабТаска", "описаниеСабТаска", Status.IN_PROGRESS, 1);
+        subTask.setStartTime(LocalDateTime.now().plusHours(1));
+        subTask.setDuration(Duration.ofMinutes(20));
         fileBackedTaskManager = new FileBackedTaskManager(file);
     }
 
@@ -33,7 +39,7 @@ class FileBackedTaskManagerTest {
 
         assertEquals(1, fileBackedTaskManager.tasks.size());
         assertEquals(1, fileBackedTaskManager.epics.size());
-        assertEquals(1, fileBackedTaskManager.subTasks.size()); //волшебно)
+        assertEquals(1, fileBackedTaskManager.subTasks.size());
 
         FileBackedTaskManager fileManager = FileBackedTaskManager.loadFromFile(file);
 
