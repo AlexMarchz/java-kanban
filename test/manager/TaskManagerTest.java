@@ -36,33 +36,82 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         epic = new Epic("Описание эпика", "Наименование эпика", Status.IN_PROGRESS);
 
-        subTask = new SubTask("Описание сабтаска", "Наименование сабтаска", Status.IN_PROGRESS, 1);
+        subTask = new SubTask("Описание сабтаска", "Наименование сабтаска", Status.IN_PROGRESS, 2);
         subTask.setStartTime(LocalDateTime.now().plusHours(1));
         subTask.setDuration(Duration.ofMinutes(20));
     }
 
 
     @Test
-    void shouldAddTasksAndFindById() {
+    void addTask() {
+        taskManager.addTask(task);
+        assertNotNull(taskManager.showAllTasks());
+        assertEquals(task, taskManager.showAllTasks().getFirst());
+        assertEquals(1, taskManager.showAllTasks().size());
+    }
+
+    @Test
+    void addEpic() {
+        taskManager.addEpic(epic);
+        assertNotNull(taskManager.showAllEpics());
+        assertEquals(epic, taskManager.showAllEpics().getFirst());
+        assertEquals(1, taskManager.showAllEpics().size());
+    }
+
+    @Test
+    void addSubTask() {
+        taskManager.addTask(task);
+        taskManager.addEpic(epic);
+        taskManager.addSubTask(subTask);
+        assertEquals(subTask.getEpicId(), epic.getId());
+        assertNotNull(taskManager.showAllSubTasks());
+        assertEquals(subTask, taskManager.showAllSubTasks().getFirst());
+        assertEquals(1, taskManager.showAllSubTasks().size());
+    }
+
+    @Test
+    void findTaskById() {
+        taskManager.addTask(task);
+        assertEquals(task, taskManager.findTaskById(task.getId()));
+    }
+
+    @Test
+    void findEpicById() {
+        taskManager.addEpic(epic);
+        assertEquals(epic, taskManager.findEpicById(epic.getId()));
+    }
+
+    @Test
+    void findSubTaskById() {
+        taskManager.addTask(task);
+        taskManager.addEpic(epic);
+        taskManager.addSubTask(subTask);
+        assertEquals(subTask, taskManager.findSubTaskById(subTask.getId()));
+    }
+
+    @Test
+    void checkOfRemovingOfTask() {
         taskManager.addTask(task);
         assertNotNull(taskManager.findTaskById(task.getId()));
-        assertNotNull(taskManager.showAllTasks());
+        taskManager.removeTaskById(task.getId());
+        assertEquals(0, taskManager.showAllTasks().size());
     }
 
     @Test
-    void shouldAddEpicAndFindById() {
+    void checkOfRemovingOfSubTask() {
+        taskManager.addTask(task);
+        taskManager.addEpic(epic);
+        taskManager.addTask(subTask);
+        taskManager.removeSubTaskById(subTask.getId());
+        assertEquals(0, taskManager.showAllSubTasks().size());
+    }
+
+    @Test
+    void checkOfRemovingOfEpic() {
         taskManager.addEpic(epic);
         assertNotNull(taskManager.findEpicById(epic.getId()));
-        assertNotNull(taskManager.showAllEpics());
-    }
-
-    @Test
-    void shouldAddSubtaskAndFindById() {
-        taskManager.addEpic(epic);
-        SubTask subTask1 = new SubTask("Описание", "Наименование", epic.getId());
-        taskManager.addSubTask(subTask1);
-        assertNotNull(taskManager.findSubTaskById(subTask1.getId()));
-        assertNotNull(taskManager.showAllSubTasks());
+        taskManager.removeEpicById(epic.getId());
+        assertEquals(0, taskManager.showAllEpics().size());
     }
 
     @Test
@@ -128,10 +177,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void testShowAllSubTasks() {                                           //Сергей, привет, поставил 0 потому что не смог разобраться с тем, как организовать сетап, если передавать
-        taskManager.addEpic(epic);                                        //сабтаску через epic.getEpicId то тут всё ок, но loadFromFile 0 сабов будет иметь по факту, а если
-        taskManager.addSubTask(subTask);                                 //сабтаску передавать единицу, то тут по факту 0, зато там всё как и должно было быть
-        assertEquals(0, taskManager.showAllSubTasks().size()); //после единого сетапа не нашёл вариантов, пытался разные initTasks сделать и проверки, но бестоклу
+    void testShowAllSubTasks() {
+        taskManager.addTask(task);
+        taskManager.addEpic(epic);
+        taskManager.addSubTask(subTask);
+        assertEquals(1, taskManager.showAllSubTasks().size());
     }
 
     @Test

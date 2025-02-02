@@ -37,7 +37,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     fileManager.tasks.put(task.getId(), task);
                     fileManager.priority.add(task);
                 }
-                fileManager.nextId = Math.max(fileManager.nextId, task.getId());
+                if (fileManager.nextId < task.getId()) {
+                    fileManager.nextId = task.getId();
+                }
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Не удалось загрузить данные из файла");

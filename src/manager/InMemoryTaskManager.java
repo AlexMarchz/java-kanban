@@ -21,7 +21,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, Task> tasks = new HashMap<>();
     protected Set<Task> priority = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
-    protected int nextId = 0;
+    protected int nextId = 1;
 
     public InMemoryTaskManager(InMemoryHistoryManager history) {
         this.history = history;
