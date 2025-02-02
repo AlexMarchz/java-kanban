@@ -32,8 +32,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 } else if (task.getType() == TaskType.SUBTASK) {
                     fileManager.subTasks.put(task.getId(), (SubTask) task);
                     fileManager.epics.get(((SubTask) task).getEpicId()).setSubTaskIds(task.getId());
+                    fileManager.priority.add(task);
                 } else {
                     fileManager.tasks.put(task.getId(), task);
+                    fileManager.priority.add(task);
                 }
                 fileManager.nextId = Math.max(fileManager.nextId, task.getId());
             }

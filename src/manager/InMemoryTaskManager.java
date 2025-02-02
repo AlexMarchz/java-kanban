@@ -31,7 +31,7 @@ public class InMemoryTaskManager implements TaskManager {
         return nextId++;
     }
 
-    public void updateEpicTime(Epic epic) {
+    private void updateEpicTime(Epic epic) {
         List<Task> subTasksList = getSubTasksForEpic(epic);
         if (subTasksList.isEmpty()) {
             return;
@@ -42,12 +42,14 @@ public class InMemoryTaskManager implements TaskManager {
         LocalDateTime endTime = subTasksList.getLast().getEndTime(); // Время окончания
 
         for (Task subTask : subTasksList) {
-            totalDuration = totalDuration.plus(subTask.getDuration());
-            if (subTask.getStartTime().isBefore(startTime)) {
-                startTime = subTask.getStartTime();  // Обновляем время
-            }
-            if (subTask.getEndTime().isAfter(endTime)) {
-                endTime = subTask.getEndTime();  // Обновляем время
+            if (subTask != null) { // Проверяем null
+                totalDuration = totalDuration.plus(subTask.getDuration());
+                if (subTask.getStartTime() != null && subTask.getStartTime().isBefore(startTime)) {
+                    startTime = subTask.getStartTime(); // Обновляем время
+                }
+                if (subTask.getEndTime() != null && subTask.getEndTime().isAfter(endTime)) {
+                    endTime = subTask.getEndTime(); // Обновляем время
+                }
             }
         }
 
@@ -68,7 +70,7 @@ public class InMemoryTaskManager implements TaskManager {
         return subTasks;
     }
 
-    public void addPriority(Task task) {
+    protected void addPriority(Task task) {
         if (task.getType().equals(TaskType.EPIC)) {
             return;  // Не добавляем эпики
         }
@@ -78,11 +80,8 @@ public class InMemoryTaskManager implements TaskManager {
                 if (existingTask.getId() == task.getId()) {
                     priority.remove(existingTask);  // Удаляем старую версию, если она уже есть
                 }
-                if (checkForIntersection(task, existingTask)) {
-                    return;  // Если есть пересечение, не добавляем задачу
-                }
             }
-            priority.add(task);  // Если пересечений нет, добавляем задачу
+            priority.add(task);  // добавляем задачу
         }
     }
 
@@ -91,7 +90,7 @@ public class InMemoryTaskManager implements TaskManager {
                 !task1.getStartTime().isAfter(task2.getEndTime());
     }
 
-    public void relevancePriority(Task task) {
+    private void relevancePriority(Task task) {
         if (task == null || task.getStartTime() == null) {
             return;
         }
