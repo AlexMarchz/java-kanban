@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface TaskManager {
 
+    List<Task> getPriorityTasks();
+
     void addTask(Task task);
 
     void addSubTask(SubTask subTask);

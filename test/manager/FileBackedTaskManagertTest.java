@@ -1,45 +1,45 @@
 package manager;
-import data.Epic;
+
 import data.SubTask;
-import data.Task;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import status.Status;
 
 import static org.junit.jupiter.api.Assertions.*;
-import java.io.*;
 
-class FileBackedTaskManagerTest {
+import java.io.File;
+import java.io.IOException;
 
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     private File file;
-    private Task task;
-    private Epic epic;
-    private SubTask subTask;
-    private FileBackedTaskManager fileBackedTaskManager;
+
+    @Override
+    protected FileBackedTaskManager createTaskManager() {
+        return new FileBackedTaskManager(file);
+    }
 
     @BeforeEach
     void setUp() throws IOException {
         file = File.createTempFile("test", ".csv");
-        task = new Task("имяТаска", "описаниеТаска", Status.IN_PROGRESS);
-        epic = new Epic("имяЭпика", "описаниеЭпика", Status.IN_PROGRESS);
-        subTask = new SubTask("имяСабТаска", "описаниеСабТаска", Status.IN_PROGRESS, 1);
-        fileBackedTaskManager = new FileBackedTaskManager(file);
+        taskManager = createTaskManager();
+        initTasks();
     }
 
     @Test
     void testLoadFromFile() {
-        fileBackedTaskManager.addTask(task);
-        fileBackedTaskManager.addEpic(epic);
-        fileBackedTaskManager.addSubTask(subTask);
+        taskManager.addTask(task);
+        taskManager.addEpic(epic);
+        taskManager.addSubTask(subTask);
 
-        assertEquals(1, fileBackedTaskManager.tasks.size());
-        assertEquals(1, fileBackedTaskManager.epics.size());
-        assertEquals(1, fileBackedTaskManager.subTasks.size()); //волшебно)
+        assertEquals(1, taskManager.showAllTasks().size());
+        assertEquals(1, taskManager.showAllEpics().size());
+        assertEquals(1, taskManager.showAllSubTasks().size());
 
         FileBackedTaskManager fileManager = FileBackedTaskManager.loadFromFile(file);
 
-        assertEquals(fileBackedTaskManager.showAllTasks(), fileManager.showAllTasks());
-        assertEquals(fileBackedTaskManager.showAllEpics(), fileManager.showAllEpics());
-        assertEquals(fileBackedTaskManager.showAllSubTasks(), fileManager.showAllSubTasks());
+        assertEquals(taskManager.showAllTasks(), fileManager.showAllTasks());
+        assertEquals(taskManager.showAllEpics(), fileManager.showAllEpics());
+        assertEquals(taskManager.showAllSubTasks(), fileManager.showAllSubTasks());
     }
 
     @Test
@@ -48,8 +48,8 @@ class FileBackedTaskManagerTest {
         FileBackedTaskManager loadFile = FileBackedTaskManager.loadFromFile(emptyFile);
 
         assertNotNull(loadFile);
-        assertEquals(0, loadFile.epics.size());
-        assertEquals(0, loadFile.subTasks.size());
-        assertEquals(0, loadFile.tasks.size());
+        assertEquals(0, loadFile.showAllTasks().size());
+        assertEquals(0, loadFile.showAllEpics().size());
+        assertEquals(0, loadFile.showAllSubTasks().size());
     }
 }

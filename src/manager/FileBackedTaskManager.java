@@ -11,10 +11,10 @@ import java.nio.charset.StandardCharsets;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
-    private static final String HEADER = "id,type,name,description, epic\n";
+    private static final String HEADER = "id,type,name,description,start,end,duration,epic\n";
 
     public FileBackedTaskManager(File file) {
-        super(Managers.getDefaultHistory()); //а почему так лучше?
+        super(Managers.getDefaultHistory());
         this.file = file;
     }
 
@@ -26,16 +26,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             bufferedReader.readLine();
 
             while ((line = bufferedReader.readLine()) != null) {
-                Task task = taskFromString(line);
+                Task task = TaskUtils.taskFromString(line);
                 if (task.getType() == TaskType.EPIC) {
                     fileManager.epics.put(task.getId(), (Epic) task);
                 } else if (task.getType() == TaskType.SUBTASK) {
                     fileManager.subTasks.put(task.getId(), (SubTask) task);
                     fileManager.epics.get(((SubTask) task).getEpicId()).setSubTaskIds(task.getId());
+                    fileManager.priority.add(task);
                 } else {
                     fileManager.tasks.put(task.getId(), task);
+                    fileManager.priority.add(task);
                 }
-                fileManager.nextId = Math.max(fileManager.nextId, task.getId());
+                if (fileManager.nextId < task.getId()) {
+                    fileManager.nextId = task.getId();
+                }
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Не удалось загрузить данные из файла");
@@ -47,25 +51,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             bufferedWriter.write(HEADER);
             for (Task task : showAllTasks()) {
-                bufferedWriter.write(taskToString(task));
+                bufferedWriter.write(TaskUtils.taskToString(task));
             }
             for (Epic epic : showAllEpics()) {
-                bufferedWriter.write(taskToString(epic));
+                bufferedWriter.write(TaskUtils.taskToString(epic));
             }
             for (SubTask subTask : showAllSubTasks()) {
-                bufferedWriter.write(taskToString(subTask));
+                bufferedWriter.write(TaskUtils.taskToString(subTask));
             }
         } catch (IOException io) {
             throw new ManagerSaveException("Не удалось сохранить файл");
         }
-    }
-
-    private static String taskToString(Task task) {
-        return TaskUtils.taskToString(task);
-    }
-
-    private static Task taskFromString(String value) {
-        return TaskUtils.taskFromString(value);
     }
 
     @Override
