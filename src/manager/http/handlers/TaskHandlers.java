@@ -11,6 +11,7 @@ public class TaskHandlers extends BaseHttpHandler {
     public TaskHandlers(TaskManager taskManager, Gson gson) {
         super(taskManager, gson);
     }
+
     @Override
     public void safeHandle(HttpExchange exchange) throws IOException {
         Endpoint endpoint = getEndpoint(exchange);
