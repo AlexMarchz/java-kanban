@@ -229,4 +229,61 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.findTaskById(task.getId());
         assertEquals(List.of(epic, task), taskManager.getHistory());
     }
+
+    @Test
+    void shouldUpdateSubTask() {
+        taskManager.addTask(task);
+        taskManager.addEpic(epic);
+        taskManager.addSubTask(subTask);
+
+        SubTask updatedSubTask = new SubTask("Обновленное описание", "Обновленное название", Status.DONE, epic.getId());
+        updatedSubTask.setId(subTask.getId());
+        updatedSubTask.setStartTime(subTask.getStartTime().plusHours(2));
+        updatedSubTask.setDuration(Duration.ofMinutes(30));
+
+        taskManager.updateSubTask(updatedSubTask);
+
+        SubTask result = taskManager.findSubTaskById(subTask.getId());
+        assertNotNull(result);
+        assertEquals(updatedSubTask.getName(), result.getName());
+        assertEquals(updatedSubTask.getDescriptions(), result.getDescriptions());
+        assertEquals(updatedSubTask.getStatus(), result.getStatus());
+        assertEquals(updatedSubTask.getStartTime(), result.getStartTime());
+        assertEquals(updatedSubTask.getDuration(), result.getDuration());
+    }
+
+    @Test
+    void shouldUpdateEpic() {
+        taskManager.addEpic(epic);
+
+        Epic updatedEpic = new Epic("Обновленное описание эпика", "Обновленное название эпика", Status.DONE);
+        updatedEpic.setId(epic.getId());
+
+        taskManager.updateEpic(updatedEpic);
+
+        Epic result = taskManager.findEpicById(epic.getId());
+        assertNotNull(result);
+        assertEquals(updatedEpic.getName(), result.getName());
+        assertEquals(updatedEpic.getDescriptions(), result.getDescriptions());
+    }
+
+    @Test
+    void shouldUpdateTask() {
+        taskManager.addTask(task);
+
+        Task updatedTask = new Task("Обновленное описание задачи", "Обновленное название задачи", Status.DONE);
+        updatedTask.setId(task.getId());
+        updatedTask.setStartTime(task.getStartTime().plusHours(2));
+        updatedTask.setDuration(Duration.ofMinutes(45));
+
+        taskManager.updateTask(updatedTask);
+
+        Task result = taskManager.findTaskById(task.getId());
+        assertNotNull(result);
+        assertEquals(updatedTask.getName(), result.getName());
+        assertEquals(updatedTask.getDescriptions(), result.getDescriptions());
+        assertEquals(updatedTask.getStatus(), result.getStatus());
+        assertEquals(updatedTask.getStartTime(), result.getStartTime());
+        assertEquals(updatedTask.getDuration(), result.getDuration());
+    }
 }
