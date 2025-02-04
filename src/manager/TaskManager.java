@@ -42,4 +42,10 @@ public interface TaskManager {
     List<Task> showAllTasks();
 
     List<Task> getHistory();
+
+    void updateEpic(Epic epic);
+
+    void updateSubTask(SubTask subtask);
+
+    void updateTask(Task task);
 }
