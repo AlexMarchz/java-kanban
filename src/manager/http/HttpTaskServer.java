@@ -16,6 +16,7 @@ public class HttpTaskServer {
     protected Gson gson;
     protected HttpServer server;
     private static final int PORT = 8080;
+
     public HttpTaskServer(TaskManager taskManager) {
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
@@ -32,14 +33,17 @@ public class HttpTaskServer {
             throw new RuntimeException("Ошибка создания http-сервера на порте - " + PORT);
         }
     }
+
     public Gson getGson() {
         return gson;
     }
+
     public void start() {
         System.out.println("Сервер запушен на порту " + PORT);
         System.out.println("http://localhost:" + PORT + "/");
         server.start();
     }
+
     public void stop() {
         System.out.println("Сервер на порту " + PORT + " был остановлен");
         server.stop(0);
