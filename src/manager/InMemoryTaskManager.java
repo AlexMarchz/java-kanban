@@ -15,7 +15,7 @@ import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    static InMemoryHistoryManager history;
+    private final HistoryManager history;
     protected final Map<Integer, SubTask> subTasks = new HashMap<>();
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected final Map<Integer, Task> tasks = new HashMap<>();
@@ -23,12 +23,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     protected int nextId = 1;
 
-    public InMemoryTaskManager(InMemoryHistoryManager history) {
-        InMemoryTaskManager.history = history;
+    public InMemoryTaskManager(HistoryManager history) {
+        this.history = history;
     }
 
     public InMemoryTaskManager() {
-        history = new InMemoryHistoryManager();
+        this.history = new InMemoryHistoryManager();
     }
 
     private int generatorId() {

@@ -14,14 +14,11 @@ public class HistoryHandler extends BaseHttpHandler {
     public void safeHandle(HttpExchange exchange) throws IOException {
         String requestMethod = exchange.getRequestMethod();
         String[] split = exchange.getRequestURI().getPath().split("/");
+
         if (requestMethod.equals("GET") && split[1].equals("history")) {
-            try {
-                sendText(exchange, gson.toJson(taskManager.getHistory()));
-            } catch (Exception e) {
-                writeResponse(exchange, 500, "");
-            }
+            sendText(exchange, gson.toJson(taskManager.getHistory()));
         } else {
-            writeResponse(exchange, 400, "");
+            writeResponse(exchange, 400, "Некорректный запрос. Используйте GET history.");
         }
     }
 }
